@@ -37,6 +37,8 @@
 		<spring.boot.maven.plugin.version>3.2.5</spring.boot.maven.plugin.version>
 		<nexus.staging.maven.plugin.version>1.6.7</nexus.staging.maven.plugin.version>
 		<maven.sonar.plugin.version>3.7.0.1746</maven.sonar.plugin.version>
+		<sonar.organization>test-integrations</sonar.organization>
+ 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<!-- git -->
 		<git.commit.id.plugin.version>3.0.1</git.commit.id.plugin.version>
 		<springdoc.openapi.maven.plugin>0.2</springdoc.openapi.maven.plugin>
@@ -89,30 +91,6 @@
 		<modelmapper.version>0.7.4</modelmapper.version>
 		<java.interceptor.version>1.2</java.interceptor.version>
 		<icu.version>63.1</icu.version>
-
-		<sonar.coverage.exclusions>
-			**/code/**,
-			**/config/**,
-			**/dao/**,
-			**/dto/**,
-			**/entity/**,
-			**/errorcodes/**,
-			**/exception/**,
-			**/exception/system/**,
-			**/exception/util/**,
-			**/repository/**,
-			**/*Config.java,
-			**/*Application.java,
-			**/batchjob/**,
-			**/util/**,
-			**/stateUtil/**,
-			**/preregistration/application/dto/*.java,
-			**/preregistration/application/dto/ApplicantTypeCodeDTO.java,
-			**/preregistration/application/dto/ApplicantTypeKeyValueDTO.java,
-			**/preregistration/datasync/dto/*.java,
-			**/preregistration/booking/dto/*.java
-		</sonar.coverage.exclusions>
-		<sonar.cpd.exclusions>**/dto/**,**/entity/**,**/config/**</sonar.cpd.exclusions>
 
 		<!-- Mosip kernel -->
 		<kernel.bom.version>1.2.1-SNAPSHOT</kernel.bom.version>
@@ -417,30 +395,8 @@
 	<profiles>
 		<profile>
 			<id>sonar</id>
-			<properties>
-				<sonar.sources>.</sonar.sources>
-				<sonar.inclusions>src/main/java/**,src/main/resources/**</sonar.inclusions>
-				<sonar.exclusions>${sonar.coverage.exclusions}</sonar.exclusions>
-				<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-			</properties>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
 			<build>
 				<plugins>
-					<plugin>
-						<groupId>org.sonarsource.scanner.maven</groupId>
-						<artifactId>sonar-maven-plugin</artifactId>
-						<version>${maven.sonar.plugin.version}</version>
-						<executions>
-							<execution>
-								<phase>verify</phase>
-								<goals>
-									<goal>sonar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
 					<plugin>
 						<groupId>pl.project13.maven</groupId>
 						<artifactId>git-commit-id-plugin</artifactId>

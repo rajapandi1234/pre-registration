@@ -1,39 +1,49 @@
-name: "CodeQL"
+name: "CodeQL Analysis for Java"
+
 on:
   push:
-    branches: [ "develop" ]
+    branches:
+      - develop  # Adjust to match your default or target branches
   pull_request:
-    branches: [ "develop" ]
+    branches:
+      - develop  # Adjust to match your target branches
   schedule:
-    - cron: '0 0 * * 0'
+    - cron: "0 2 * * 0"  # Optional: Weekly analysis on Sunday at 2 AM
 
 jobs:
   analyze:
-    name: Analyze
+    name: Analyze Java Code
     runs-on: ubuntu-latest
+
     permissions:
       actions: read
       contents: read
-      security-events: write
+      security-events: write  # Required for uploading CodeQL results
 
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'java', 'javascript' ]
-        # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby', 'swift' ]
-        # Learn more: https://docs.github.com/en/code-security/code-scanning/using-codeql-code-scanning/about-codeql
+        language: [java]  # This workflow is for Java analysis
 
     steps:
+    # Step 1: Check out the repository
     - name: Checkout repository
       uses: actions/checkout@v3
 
+    # Step 2: Initialize CodeQL
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
         languages: ${{ matrix.language }}
 
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
+    # Step 3: Build the Java code (necessary for analysis)
+    - name: Build the code
+      run: |
+        # Example: Use Maven to build the Java project
+        mvn clean compile
 
+    # Step 4: Perform CodeQL analysis
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
+      with:
+        category: security  # Results will appear in the Security tab

@@ -1,0 +1,30 @@
+name: Secret Scan with TruffleHog
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  trufflehog-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v3
+
+      - name: Install TruffleHog
+        run: |
+          pip install trufflehog
+
+      - name: Run TruffleHog
+        env:
+          TRUFFLEHOG_EXIT_CODE: 1 # Fail the job if secrets are detected
+        run: |
+          echo "Scanning for secrets with TruffleHog..."
+          # Run TruffleHog and print results to the GitHub Actions log
+          trufflehog filesystem --directory . || exit $TRUFFLEHOG_EXIT_CODE

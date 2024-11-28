@@ -1,23 +1,20 @@
-name: Secret Scan with TruffleHog
+name: TruffleHog Scan
 
 on:
-  push:
-    branches:
-      - develop
   pull_request:
     branches:
       - main
-      - develop
 
 jobs:
   trufflehog-scan:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout PR code
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Scan for Secrets with TruffleHog
-        uses: trufflesecurity/trufflehog-actions-scan@v3
+      - name: Run TruffleHog
+        uses: trufflesecurity/trufflehog@v3
         with:
-          scanArguments: '--no-filesystem-clone'
+          scan: filesystem
+          regex: true

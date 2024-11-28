@@ -17,14 +17,7 @@ jobs:
       - name: Checkout PR code
         uses: actions/checkout@v3
 
-      - name: Install TruffleHog
-        run: |
-          pip install trufflehog
-
-      - name: Run TruffleHog
-        env:
-          TRUFFLEHOG_EXIT_CODE: 1 # Fail the job if secrets are detected
-        run: |
-          echo "Scanning for secrets with TruffleHog..."
-          # Run TruffleHog and print results to the GitHub Actions log
-          trufflehog filesystem --regex || exit $TRUFFLEHOG_EXIT_CODE
+      - name: Scan for Secrets with TruffleHog
+        uses: trufflesecurity/trufflehog-actions-scan@v3
+        with:
+          scanArguments: '--no-filesystem-clone'

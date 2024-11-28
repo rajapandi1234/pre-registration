@@ -27,4 +27,4 @@ jobs:
         run: |
           echo "Scanning for secrets with TruffleHog..."
           # Run TruffleHog and print results to the GitHub Actions log
-          trufflehog filesystem --regex . || exit $TRUFFLEHOG_EXIT_CODE
+          trufflehog filesystem --regex || exit $TRUFFLEHOG_EXIT_CODE

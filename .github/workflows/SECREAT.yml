@@ -1,0 +1,37 @@
+name: Secret Scan with Gitleaks
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  gitleaks-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v3
+
+      - name: Install Gitleaks
+        run: |
+          curl -s https://api.github.com/repos/gitleaks/gitleaks/releases/latest \
+          | grep "browser_download_url.*linux_amd64" \
+          | cut -d : -f 2,3 \
+          | tr -d \" \
+          | wget -qi - -O gitleaks && chmod +x gitleaks && sudo mv gitleaks /usr/local/bin/
+
+      - name: Run Gitleaks on PR Code
+        env:
+          GITLEAKS_EXIT_CODE: 1 # Fail the job if secrets are detected
+        run: |
+          # Scan the entire codebase in the PR
+          gitleaks detect --source . --report-format json --report-path gitleaks-report.json --exit-code $GITLEAKS_EXIT_CODE
+
+      - name: Upload Report (Optional)
+        if: always() # Ensure this step runs regardless of scan result
+        uses: actions/upload-artifact@v3
+        with:
+          name: gitleaks-report
+          path: gitleaks-report.json

@@ -1,6 +1,9 @@
 name: Secret Scan with Gitleaks
 
 on:
+  push:
+    branches:
+      - develop
   pull_request:
     branches:
       - main

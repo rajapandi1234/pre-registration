@@ -14,6 +14,9 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+# Mock secret for testing
+API_KEY = "test1234567890abcdef"
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

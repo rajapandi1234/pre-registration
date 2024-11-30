@@ -1,0 +1,24 @@
+name: Secret Scan with TruffleHog (PR Only)
+
+on:
+  pull_request:
+    branches:
+      - develop # Trigger on all pull requests
+
+jobs:
+  trufflehog-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository Code
+        uses: actions/checkout@v3
+
+      - name: Fetch PR Changes
+        run: |
+          # Fetch only the changes in the pull request
+          git fetch --no-tags --prune --depth=1 origin +refs/pull/${{ github.event.pull_request.number }}/merge
+
+      - name: TruffleHog Scan (PR Changes Only)
+        uses: trufflesecurity/trufflehog@v3.84.1
+        with:
+          scanArguments: '--no-filesystem-clone'

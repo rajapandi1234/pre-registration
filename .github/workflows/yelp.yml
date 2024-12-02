@@ -14,4 +14,4 @@ jobs:
       - name: Execute secret-search
         uses: Hacks4Snacks/secret-search@main
         with:
-          fail-on-error: 'false'
+          fail-on-error: 'true'

@@ -1,0 +1,17 @@
+---
+on:
+  push:
+    branches:
+      - 'develop'
+
+jobs:
+  secret-search-job:
+    runs-on: 'ubuntu-latest'
+    name: Job to scan for secrets
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Execute secret-search
+        uses: Hacks4Snacks/secret-search@main
+        with:
+          fail-on-error: 'false'

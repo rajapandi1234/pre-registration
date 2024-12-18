@@ -3,7 +3,7 @@ name: Detect Secrets in PR
 on:
   pull_request:
     branches:
-        - develop
+      - develop
     paths:
       - '**/*'
 
@@ -15,17 +15,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Search for secrets with custom regex patterns
+      - name: Fetch and use regex patterns from external repository
         run: |
-          # Define regex patterns for secrets
-          SECRET_PATTERNS=(
-            "AIza[0-9A-Za-z-_]{35}"  # Example: Google API key
-            "AKIA[0-9A-Z]{16}"        # Example: AWS Access Key
-            "-----BEGIN (RSA )?PRIVATE KEY-----"  # Example: RSA private key
-          )
+          # Fetch the regex patterns directly from the file in the external repo
+          REGEX_PATTERNS=$(curl -s https://raw.githubusercontent.com/rajapandi1234/kattu/master/regex.toml | grep -oP '(?<=pattern = ").*?(?=")')
 
           # Loop through each regex pattern and search in files
-          for pattern in "${SECRET_PATTERNS[@]}"; do
+          for pattern in $REGEX_PATTERNS; do
             echo "Searching for pattern: $pattern"
             # Use grep to search for patterns in the files
             grep -rP "$pattern" . || true  # `-r` for recursive, `-P` for Perl-compatible regex

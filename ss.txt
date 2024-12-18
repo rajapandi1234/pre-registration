@@ -1,0 +1,7 @@
+Here is a Google API key: AIzaSyDfhUIlGVtK-Jndk67fg-QVfp0bGT0ndAK
+Here is an AWS Access Key: AKIAEXAMPLEACCESSKEY1234
+This is a test RSA private key:
+-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqh...
+-----END PRIVATE KEY-----
+Some random text here

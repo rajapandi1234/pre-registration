@@ -1,0 +1,27 @@
+name: current
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  detect-secrets:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install detect-secrets
+      run: |
+        pip install detect-secrets
+    - name: Scan for leaked secrets in PR
+      run: |
+        detect-secrets scan > result.txt
+        if grep -q 'Secret' result.txt; then
+          echo "Secrets detected!"
+          cat result.txt
+          exit 1
+        else
+          echo "No secrets detected."
+        fi

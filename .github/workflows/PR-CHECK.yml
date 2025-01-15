@@ -1,4 +1,4 @@
-name: Detect Leaked Secrets 1
+name: Detect Leaked Secrets 3
 
 on:
   pull_request:
@@ -16,10 +16,6 @@ jobs:
       run: |
         pip install detect-secrets
 
-    - name: Create baseline file
-      run: |
-        detect-secrets scan > .secrets.baseline
-
     - name: Scan for leaked secrets in PR
       run: |
-        detect-secrets scan --baseline .secrets.baseline
+        detect-secrets scan

@@ -1,0 +1,23 @@
+name: Detect Leaked Secrets
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  detect-secrets:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install detect-secrets
+      run: |
+        pip install detect-secrets
+
+    - name: Scan for leaked secrets in PR
+      run: |
+        git fetch origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+        git diff origin/${{ github.base_ref }}...HEAD > diff.patch
+        detect-secrets scan --baseline .secrets.baseline diff.patch

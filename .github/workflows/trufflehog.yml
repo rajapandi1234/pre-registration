@@ -1,6 +1,3 @@
-Sure! Here's an updated GitHub Actions workflow that includes regex patterns for detecting common passwords and client secrets:
-
-```yaml
 name: Detect Leaked Secrets
 
 on:

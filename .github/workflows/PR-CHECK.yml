@@ -1,4 +1,4 @@
-name: Detect Leaked Secrets
+name: Detect Leaked Secrets2
 
 on:
   pull_request:
@@ -18,6 +18,4 @@ jobs:
 
     - name: Scan for leaked secrets in PR
       run: |
-        git fetch origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
-        git diff origin/${{ github.base_ref }}...HEAD > diff.patch
-        detect-secrets scan --baseline .secrets.baseline diff.patch
+        detect-secrets scan --baseline .secrets.baseline

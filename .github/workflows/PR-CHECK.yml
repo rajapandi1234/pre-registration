@@ -1,4 +1,4 @@
-name: Detect Leaked Secrets 4
+name: Detect Leaked Secrets 5
 
 on:
   pull_request:
@@ -16,9 +16,17 @@ jobs:
       run: |
         pip install detect-secrets
 
+    - name: Fetch base branch
+      run: |
+        git fetch origin +refs/heads/${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}
+
+    - name: Generate diff
+      run: |
+        git diff origin/${{ github.base_ref }}...HEAD > diff.patch
+
     - name: Scan for leaked secrets in PR
       run: |
-        detect-secrets scan > result.txt
+        detect-secrets scan diff.patch > result.txt
         if grep -q 'Secret' result.txt; then
           echo "Secrets detected!"
           cat result.txt

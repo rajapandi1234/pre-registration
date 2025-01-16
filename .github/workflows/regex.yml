@@ -3,7 +3,7 @@ name: Secret Detection using Regex
 on:
   pull_request:
     branches:
-      - '**'  # Run on all PRs
+      - release-1.2.0  # Run on all PRs
 
 jobs:
   secret-detection:

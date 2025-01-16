@@ -1,0 +1,43 @@
+name: Secret Detection using Regex
+
+on:
+  pull_request:
+    branches:
+      - '**'  # Run on all PRs
+
+jobs:
+  secret-detection:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Search for potential secrets using Regex
+      - name: Detect hardcoded secrets
+        run: |
+          # Define the regex patterns to catch secrets
+          regex="(password|token|apikey|secret)[^:]*: ['\"]?([^'\"]+)"
+          
+          # Exclude valid environment-based secrets
+          exclude_regex="\${{ secrets\..* }}"
+
+          # Scan all changed files in the PR
+          git diff origin/main --name-only | while read file; do
+            if [[ -f "$file" ]]; then
+              echo "Scanning $file for secrets..."
+              matches=$(grep -E "$regex" "$file" | grep -vE "$exclude_regex")
+              
+              if [[ -n "$matches" ]]; then
+                echo "❌ Hardcoded secret found in $file:"
+                echo "$matches"
+                exit 1
+              fi
+            fi
+          done
+
+      # Step 3: Success message if no secrets are found
+      - name: No secrets found
+        if: success()
+        run: echo "✅ No hardcoded secrets detected."

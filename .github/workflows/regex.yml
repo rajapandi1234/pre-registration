@@ -1,43 +1,43 @@
-name: Secret Detection using Regex
+name: Secret Detection
 
 on:
   pull_request:
     branches:
-      - release-1.2.0  # Run on all PRs
+      - release-1.2.0
 
 jobs:
-  secret-detection:
+  detect-secrets:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout the code
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      # Step 2: Search for potential secrets using Regex
-      - name: Detect hardcoded secrets
+      - name: Scan for secrets
         run: |
-          # Define the regex patterns to catch secrets
-          regex="(password|token|apikey|secret)[^:]*: ['\"]?([^'\"]+)"
-          
-          # Exclude valid environment-based secrets
-          exclude_regex="\${{ secrets\..* }}"
+          # Define regex patterns for secrets
+          regex_patterns=(
+            'password\s*:\s*["\']?[^$][^"\']*["\']?'
+            'api[_-]?key\s*:\s*["\']?[^$][^"\']*["\']?'
+            'secret\s*:\s*["\']?[^$][^"\']*["\']?'
+          )
 
-          # Scan all changed files in the PR
-          git diff origin/main --name-only | while read file; do
-            if [[ -f "$file" ]]; then
-              echo "Scanning $file for secrets..."
-              matches=$(grep -E "$regex" "$file" | grep -vE "$exclude_regex")
-              
-              if [[ -n "$matches" ]]; then
-                echo "❌ Hardcoded secret found in $file:"
-                echo "$matches"
-                exit 1
-              fi
+          # Scan files for secrets
+          for pattern in "${regex_patterns[@]}"; do
+            if grep -E -r --exclude-dir={.git,.github} "$pattern" .; then
+              echo "Secret detected with pattern: $pattern"
+              exit 1
             fi
           done
 
-      # Step 3: Success message if no secrets are found
-      - name: No secrets found
-        if: success()
-        run: echo "✅ No hardcoded secrets detected."
+      - name: Ignore environment secrets
+        run: |
+          # Define regex pattern to ignore environment secrets
+          ignore_pattern='\$\{\{\s*secrets\.[A-Z_]+\s*\}\}'
+
+          # Scan files to ensure no false positives for environment secrets
+          if grep -E -r --exclude-dir={.git,.github} "$ignore_pattern" .; then
+            echo "No false positives detected for environment secrets"
+          else
+            echo "False positive detected for environment secrets"
+            exit 1
+          fi

@@ -18,10 +18,10 @@ jobs:
       - name: Detect hardcoded secrets
         run: |
           # Define the regex patterns to catch secrets
-          regex="(password|token|apikey|secret)[^:]*: ['\"]?([^'\"]+)"
+          regex='(password|token|apikey|secret)[^:]*: ["'\'']?([^"'\'']+)'
 
           # Exclude valid environment-based secrets
-          exclude_regex="\\${{ secrets\\..* }}"
+          exclude_regex='\${{ secrets\..* }}'
 
           # Scan all changed files in the PR
           git diff origin/main --name-only | while read file; do

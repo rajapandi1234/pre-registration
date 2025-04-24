@@ -1,4 +1,3 @@
-
 version: 2
 updates:
   - package-ecosystem: "maven"
@@ -6,4 +5,10 @@ updates:
     schedule:
       interval: "daily"
     target-branch: "develop"
+    open-pull-requests-limit: 50
+  - package-ecosystem: "maven"
+    directory: "/pre-registration"
+    schedule:
+      interval: "daily"
+    target-branch: "test"
     open-pull-requests-limit: 50

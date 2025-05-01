@@ -7,6 +7,9 @@ import static io.mosip.preregistration.core.constant.PreRegCoreConstant.LOGGER_S
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+# Mock secret for testing
+API_KEY = "test1234567890abcdef"
+
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;

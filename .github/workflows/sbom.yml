@@ -2,12 +2,13 @@ name: Generate SBOM with CycloneDX
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   generate-sbom:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -19,10 +20,12 @@ jobs:
           java-version: '11'
 
       - name: Generate CycloneDX SBOM
-        run: mvn org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom
+        run: |
+          cd pre-registration  # ✅ Ensure this matches the location of your pom.xml
+          mvn org.cyclonedx:cyclonedx-maven-plugin:makeAggregateBom
 
-      - name: Upload SBOM as artifact
+      - name: Upload SBOM
         uses: actions/upload-artifact@v4
         with:
           name: sbom
-          path: target/bom.xml
+          path: pre-registration/target/bom.xml

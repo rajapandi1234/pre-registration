@@ -40,7 +40,7 @@
 		<sonar.organization>test-integrations</sonar.organization>
  		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 		<!-- git -->
-		<git.commit.id.plugin.version>3.0.1</git.commit.id.plugin.version>
+		<git.commit.id.plugin.version>4.9.10</git.commit.id.plugin.version>
 		<springdoc.openapi.maven.plugin>0.2</springdoc.openapi.maven.plugin>
 
 		<!-- Swagger -->

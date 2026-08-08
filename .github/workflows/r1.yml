@@ -1,0 +1,38 @@
+name: Detect Secrets in PR
+
+on:
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - '**/*'
+
+jobs:
+  detect_secrets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Fetch and use regex patterns from external repository
+        run: |
+          # Fetch the regex patterns directly from the file in the external repo
+          REGEX_PATTERNS=$(curl -s https://raw.githubusercontent.com/rajapandi1234/kattu/master/regex.toml | grep -oP '(?<=pattern = ").*?(?=")')
+
+          # Loop through each regex pattern and search in files
+          for pattern in $REGEX_PATTERNS; do
+            echo "Searching for pattern: $pattern"
+            # Use grep to search for patterns in the files
+            grep -rP "$pattern" . || true  # `-r` for recursive, `-P` for Perl-compatible regex
+          done
+
+      - name: Fail if secrets found
+        run: |
+          # Check if any secrets were found
+          if [ $? -eq 0 ]; then
+            echo "Secrets detected in the PR!"
+            exit 1
+          else
+            echo "No secrets detected."
+          fi
